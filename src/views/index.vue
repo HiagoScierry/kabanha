@@ -1,16 +1,20 @@
 <template>
   <div class="w-screen h-screen">
     <div class="w-10/12 p-2 flex justify-center text-center flex-col m-auto">
-      <div
-        class="w-48 text-base bg-blue-600 hover:bg-blue-800 p-4 rounded-xl text-white"
-      >
-        Adicionar nova tarefa
+      <div class="w-36 h-4 flex justify-between items-center">
+        <input class="w-20" type="text" name="" id="" v-model="newTask" />
+        <div
+          class="bg-blue-600 hover:bg-blue-800 p-1 rounded text-white"
+          v-on:click="add()"
+        >
+          Add
+        </div>
       </div>
 
       <div
         class="flex justify-evenly items-center w-1/2 h-auto p-4 m-auto bg-gray-800"
       >
-        <div class="w-60  p-4 bg-slate-300 rounded-md">
+        <div class="w-60 p-4 bg-slate-300 rounded-md">
           <h4 class="font-bold uppercase text-start">backlog</h4>
           <draggable
             class="h-96"
@@ -27,7 +31,7 @@
           </draggable>
         </div>
 
-        <div class="w-60  p-4 bg-slate-300 rounded-md">
+        <div class="w-60 p-4 bg-slate-300 rounded-md">
           <h4 class="font-bold uppercase text-start">backlog</h4>
           <draggable
             class="h-96"
@@ -44,7 +48,7 @@
           </draggable>
         </div>
 
-        <div class="w-60  p-4 bg-slate-300 rounded-md">
+        <div class="w-60 p-4 bg-slate-300 rounded-md">
           <h4 class="font-bold uppercase text-start">backlog</h4>
           <draggable
             class="h-96"
@@ -101,10 +105,10 @@ export default {
   methods: {
     //add new tasks method
     add: function () {
-      if (this.newTask) {
+      if (this.newTask.length > 0) {
         this.arrBackLog.push({ name: this.newTask });
         this.newTask = '';
-      }
+      } 
     },
     log: function (event: any) {
       window.console.log('evt');
