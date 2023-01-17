@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="bg-blue-500 text-white rounded-md p-2">Salvar</button>
+    <button class="bg-blue-500 text-white rounded-md p-2">{{ text }}</button>
   </div>
 </template>
 

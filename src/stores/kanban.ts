@@ -44,72 +44,6 @@ export const store: IStore = reactive({
       dueDate: new Date(),
       assignee: 'user1',
     },
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
   ],
   progress: [],
   done: [],
@@ -129,7 +63,23 @@ export const storeMethods = {
       updatedDate: new Date(),
     });
   },
-  removeItemFronIndex(index: number) {
-    store.backlog.splice(index, 1);
+  removeItemFronIndex(
+    index: number,
+    arrayName: 'backlog' | 'progress' | 'done'
+  ) {
+    console.log('index', index);
+    console.log('arrayName', arrayName);
+    console.log('store', store[arrayName]);
+    store[arrayName].splice(index, 1);
+    console.log('store', store[arrayName]);
+  },
+  //como tipar o event ?
+  updateArray: (event: any, arrayName: 'backlog' | 'progress' | 'done') => {
+    if (event.added !== undefined) {
+      store[arrayName].push(event.added.element);
+    }
+    if (event.removed !== undefined) {
+      storeMethods.removeItemFronIndex(event.removed.index, arrayName);
+    }
   },
 };
