@@ -3,4 +3,5 @@ export interface ITask {
   description: string;
   priority: string;
   dueDate: Date;
+  assingee: number;
 }

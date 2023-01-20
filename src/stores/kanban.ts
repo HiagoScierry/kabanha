@@ -1,6 +1,5 @@
 import { reactive } from 'vue';
 import type { IBacklogItem } from '@/interfaces/item';
-import { status } from '@/constants/status';
 import type { ITask } from '@/interfaces/task';
 
 interface IStore {
@@ -10,41 +9,7 @@ interface IStore {
 }
 
 export const store: IStore = reactive({
-  backlog: [
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
-    {
-      id: new Date().getTime(),
-      title: 'Ajustar css do board',
-      description: 'DESCRICAO',
-      status: status.NEW,
-      priority: 'high',
-      createdDate: new Date(),
-      updatedDate: new Date(),
-      dueDate: new Date(),
-      assignee: 'user1',
-    },
-  ],
+  backlog: [],
   progress: [],
   done: [],
 });
@@ -57,10 +22,8 @@ export const storeMethods = {
       description: task.description,
       priority: task.priority,
       dueDate: task.dueDate,
-      status: status.NEW,
-      assignee: '',
-      createdDate: new Date(),
-      updatedDate: new Date(),
+      assignee: task.assingee.toString(),
+      created_at: new Date(),
     });
   },
   removeItemFronIndex(
@@ -77,9 +40,26 @@ export const storeMethods = {
   updateArray: (event: any, arrayName: 'backlog' | 'progress' | 'done') => {
     if (event.added !== undefined) {
       store[arrayName].push(event.added.element);
+
+      if (arrayName === 'progress') {
+        storeMethods.itemInProgress(event.added.element);
+      }
+
+      if (arrayName === 'done') {
+        storeMethods.itemHasDone(event.added.element);
+      }
     }
+
     if (event.removed !== undefined) {
       storeMethods.removeItemFronIndex(event.removed.index, arrayName);
     }
+  },
+
+  itemInProgress: (item: IBacklogItem) => {
+    item.inDevelementDate = new Date();
+  },
+  itemHasDone: (item: IBacklogItem) => {
+    item.finishDate = new Date();
+    store.done.push(item);
   },
 };

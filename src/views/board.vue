@@ -8,6 +8,7 @@
     <div class="flex justify-evenly items-center h-full">
       <div class="border rounded-md flex flex-col items-center w-1/4 h-5/6 p-2">
         <h2 class="font-bold uppercase mb-4">backlog</h2>
+        <p class="text-sm mb-2">Qtd: {{ arrBackLog.length }}</p>
         <draggrable
           v-model="arrBackLog"
           group="kanban"
@@ -20,6 +21,7 @@
           <template #item="{ element, index }">
             <div
               class="flex justify-between w-full h-24 p-2 border border-slate-50 rounded-md mb-2"
+              @click="routerToEdit(element.id, 'backlog')"
             >
               <div class="flex flex-col justify-between items-start">
                 <p class="break-all">{{ element.title }}</p>
@@ -44,6 +46,7 @@
       </div>
       <div class="border rounded-md flex flex-col items-center w-1/4 h-5/6 p-2">
         <h2 class="font-bold uppercase mb-4">Em progresso</h2>
+        <p class="text-sm mb-2">Qtd: {{ arrInProgress.length }}</p>
         <draggrable
           v-model="arrInProgress"
           group="kanban"
@@ -56,6 +59,7 @@
           <template #item="{ element, index }">
             <div
               class="flex justify-between w-full h-24 p-2 border border-slate-50 rounded-md mb-2"
+              @click="routerToEdit(element.id, 'progress')"
             >
               <div class="flex flex-col justify-between items-start">
                 <p class="break-all">{{ element.title }}</p>
@@ -81,10 +85,11 @@
 
       <div class="border rounded-md flex flex-col items-center w-1/4 h-5/6 p-2">
         <h2 class="font-bold uppercase mb-4">Pronto</h2>
+        <p class="text-sm mb-2">Qtd: {{ arrDone.length }}</p>
         <draggrable
           v-model="arrDone"
           group="kanban"
-          @start="true"
+          @start="false"
           @end="false"
           item-key="id"
           @change="update($event, 'done')"
@@ -93,6 +98,7 @@
           <template #item="{ element, index }">
             <div
               class="flex justify-between w-full h-24 p-2 border border-slate-50 rounded-md mb-2"
+              @click="routerToEdit(element.id, 'done')"
             >
               <div class="flex flex-col justify-between items-start">
                 <p class="break-all">{{ element.title }}</p>
@@ -117,6 +123,12 @@
         </draggrable>
       </div>
     </div>
+    <div class="w-full bg-gray-200 h-1">
+      <div
+        class="bg-blue-600 h-1"
+        :style="`width: ${progressBarPercent}%`"
+      ></div>
+    </div>
   </div>
 </template>
 
@@ -125,23 +137,38 @@
 import { store, storeMethods } from '@/stores/kanban';
 import draggrable from 'vuedraggable';
 import type { IBacklogItem } from '../interfaces/item';
-import buttonVue from '@/components/button.vue'
+import buttonVue from '@/components/button.vue';
 
 export default {
   name: 'kanban-board',
   components: {
     draggrable,
-    buttonVue
+    buttonVue,
+  },
+  watch: {
+    progressBarPercent: {
+      handler: function (val) {
+        if (val === 100) {
+          alert('Parabéns, você concluiu todas as tarefas!');
+        }
+      },
+      immediate: true,
+    },
   },
   data(): {
     arrBackLog: IBacklogItem[];
     arrInProgress: IBacklogItem[];
     arrDone: IBacklogItem[];
+    progressBarPercent: number;
   } {
     return {
       arrBackLog: store.backlog,
       arrInProgress: store.progress,
       arrDone: store.done,
+      progressBarPercent:
+        (store.done.length /
+          (store.backlog.length + store.progress.length + store.done.length)) *
+        100,
     };
   },
   methods: {
@@ -149,25 +176,28 @@ export default {
     routerToAdd: function () {
       this.$router.push('/task');
     },
+    routerToEdit: function (
+      id: number,
+      arrName: 'backlog' | 'progress' | 'done'
+    ) {
+      this.$router.push(`/task/${arrName}/${id}`);
+    },
     removeFromIndex: function (
       index: number,
       arrName: 'backlog' | 'progress' | 'done'
     ) {
-      console.log(this.arrInProgress);
-
       storeMethods.removeItemFronIndex(index, arrName);
-    },
-    add: function () {
-      storeMethods.addItem({
-        title: 'item.title',
-        description: 'item.description',
-        priority: 'item.priority',
-        dueDate: new Date(),
-      });
+      this.calcProgressBar();
     },
     update: function (event: any, arrName: 'backlog' | 'progress' | 'done') {
-      console.log('update', arrName, event);
       storeMethods.updateArray(event, arrName);
+      this.calcProgressBar();
+    },
+    calcProgressBar: function () {
+      this.progressBarPercent =
+        (store.done.length /
+          (store.backlog.length + store.progress.length + store.done.length)) *
+        100;
     },
   },
 };

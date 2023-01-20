@@ -34,9 +34,23 @@
           />
         </div>
         <div class="w-2/3">
-          <dateWithLabelVue label="Data" :value="task.dueDate" name="date" />
+          <dateWithLabelVue
+            label="Data limite"
+            :value="task.dueDate"
+            name="date"
+          />
+        </div>
+
+        <div class="w-2/3">
+          <selectWithLabelVue
+            label="Atribuir a"
+            :value="task.assingee.toString()"
+            name="assingee"
+            :options="devs"
+          />
         </div>
       </div>
+
       <textAreaWithLabelVue
         label="Descrição"
         :value="task.description"
@@ -56,7 +70,8 @@ import selectWithLabelVue from '@/components/selectWithLabel.vue';
 import dateWithLabelVue from '@/components/dateWithLabel.vue';
 import textAreaWithLabelVue from '@/components/textAreaWithLabel.vue';
 import type { ITask } from '@/interfaces/task';
-import { storeMethods, store } from '@/stores/kanban';
+import { storeMethods } from '@/stores/kanban';
+import { store as storeDev } from '@/stores/developers';
 
 export default {
   name: 'AddView',
@@ -73,17 +88,23 @@ export default {
     },
     createTask() {
       storeMethods.addItem(this.task);
-      console.log(this.task);
-      console.log(store.backlog);
     },
   },
-  data(): { task: ITask } {
+  data(): {
+    task: ITask;
+    devs: { value: number; label: string }[];
+  } {
     return {
+      devs: storeDev.developers.map((dev) => ({
+        label: dev.name,
+        value: dev.id,
+      })),
       task: {
-        title: 'TESTE',
-        priority: 'high',
+        title: '',
+        priority: '',
         dueDate: new Date(),
-        description: 'hiago teste ',
+        description: '',
+        assingee: 0,
       },
     };
   },

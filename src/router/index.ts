@@ -14,6 +14,11 @@ const router = createRouter({
       path: '/task',
       name: 'task',
       component: Task,
+    },
+    {
+      path: '/task/:arrName/:id',
+      name: 'taskEdit',
+      component: Task,
     }
   ],
 });
