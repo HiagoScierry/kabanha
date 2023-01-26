@@ -2,7 +2,8 @@
   <div class="h-5/6">
     <div class="w-10/12 m-auto">
       <div class="flex justify-end items-center cursor-pointer">
-        <buttonVue text="Adicionar" @click="routerToAdd()" />
+        <buttonVue class="mr-2" text="Adicionar" @click="routerToAdd()" />
+        <buttonVue text="Desenvolvedores" @click="routerToDevs()" />
       </div>
     </div>
     <div class="flex justify-evenly items-center h-full">
@@ -128,7 +129,7 @@
         </draggrable>
       </div>
     </div>
-    <div class="w-full bg-gray-200 h-1">  
+    <div class="w-full bg-gray-200 h-1">
       <div
         class="bg-blue-600 h-1"
         :style="`width: ${progressBarPercent}%`"
@@ -178,6 +179,9 @@ export default {
   },
   methods: {
     //add new tasks method
+    routerToDevs: function () {
+      this.$router.push('/devs');
+    },
     routerToAdd: function () {
       this.$router.push('/task');
     },

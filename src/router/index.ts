@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import Board from '../views/board.vue';
-import Task from '../views/task.vue';
-import EditTask from '../views/editTask.vue';
+import Board from '@/views/board.vue';
+import Task from '@/views/task.vue';
+import EditTask from '@/views/editTask.vue';
+import Devs from '@/views/devs.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -24,6 +25,11 @@ const router = createRouter({
         id: route.params.id,
         arrName: route.params.arrName,
       }),
+    },
+    {
+      path: '/devs',
+      name: 'devs',
+      component: Devs,
     },
   ],
 });

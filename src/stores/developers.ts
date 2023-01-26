@@ -1,4 +1,3 @@
-import { Ocupation } from '@/constants/ocupation';
 import type { IDeveloper } from '@/interfaces/develpment';
 import { reactive } from 'vue';
 
@@ -9,8 +8,17 @@ export const store: {
     {
       id: 1,
       name: 'Hiago',
-      email: 'hiago@mail.com',
-      ocupation: Ocupation.Developer,
+      ocupation: 'developer',
+    },
+    {
+      id: 2,
+      name: 'João',
+      ocupation: 'designer',
+    },
+    {
+      id: 3,
+      name: 'Maria',
+      ocupation: 'tester',
     },
   ],
 });

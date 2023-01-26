@@ -1,8 +1,7 @@
-import type { Ocupation } from "@/constants/ocupation";
+import type { orTypeOcupation } from '@/constants/ocupation';
 
 export interface IDeveloper {
-  id: number;
+  id?: number;
   name: string;
-  email: string;
-  ocupation: Ocupation;
-};
+  ocupation: orTypeOcupation;
+}
