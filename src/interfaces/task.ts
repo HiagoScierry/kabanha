@@ -2,6 +2,6 @@ export interface ITask {
   title: string;
   description: string;
   priority: string;
-  dueDate: Date;
+  dueDate: string;
   assingee: number;
 }

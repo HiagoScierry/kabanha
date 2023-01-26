@@ -6,6 +6,6 @@ export interface IBacklogItem {
   inDevelementDate?: Date;
   finishDate?: Date;
   dueDate: Date;
-  assignee: string;
+  assignee: number;
   created_at: Date;
 }

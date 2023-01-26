@@ -19,7 +19,11 @@ const router = createRouter({
       path: '/task/:arrName/:id',
       name: 'taskEdit',
       component: Task,
-    }
+      props: (route) => ({
+        id: route.params.id,
+        arrName: route.params.arrName,
+      }),
+    },
   ],
 });
 

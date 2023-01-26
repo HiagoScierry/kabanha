@@ -8,21 +8,23 @@ interface IStore {
   done: IBacklogItem[];
 }
 
+const data: IStore = JSON.parse(localStorage.getItem('store') || '{}');
+
 export const store: IStore = reactive({
-  backlog: [],
-  progress: [],
-  done: [],
+  backlog: data.backlog || [],
+  progress: data.progress || [],
+  done: data.done || [],
 });
 
 export const storeMethods = {
-  addItem(task: ITask) {
+  addTask(task: ITask) {
     store.backlog.push({
       id: new Date().getTime(),
       title: task.title,
       description: task.description,
       priority: task.priority,
-      dueDate: task.dueDate,
-      assignee: task.assingee.toString(),
+      dueDate: new Date(task.dueDate),
+      assignee: task.assingee,
       created_at: new Date(),
     });
   },
@@ -30,11 +32,7 @@ export const storeMethods = {
     index: number,
     arrayName: 'backlog' | 'progress' | 'done'
   ) {
-    console.log('index', index);
-    console.log('arrayName', arrayName);
-    console.log('store', store[arrayName]);
     store[arrayName].splice(index, 1);
-    console.log('store', store[arrayName]);
   },
   //como tipar o event ?
   updateArray: (event: any, arrayName: 'backlog' | 'progress' | 'done') => {
@@ -55,11 +53,33 @@ export const storeMethods = {
     }
   },
 
+  editTask: (
+    task: ITask,
+    id: string,
+    arrName: 'backlog' | 'progress' | 'done'
+  ) => {
+    const index = store[arrName].findIndex((item) => item.id === +id);
+    const currentTask = store[arrName][index];
+
+    const newTask: IBacklogItem = {
+      ...currentTask,
+      title: task.title,
+      description: task.description,
+      priority: task.priority,
+      dueDate: new Date(task.dueDate),
+      assignee: task.assingee,
+    };
+
+    store[arrName][index] = newTask;
+  },
   itemInProgress: (item: IBacklogItem) => {
     item.inDevelementDate = new Date();
   },
   itemHasDone: (item: IBacklogItem) => {
     item.finishDate = new Date();
     store.done.push(item);
+  },
+  saveDataINLocalStorage: () => {
+    localStorage.setItem('store', JSON.stringify(store));
   },
 };

@@ -19,7 +19,7 @@ export default {
       required: true,
     },
     value: {
-      type: Date,
+      type: String,
       required: true,
     },
     name: {
