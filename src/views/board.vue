@@ -180,7 +180,7 @@ export default {
       id: number,
       arrName: 'backlog' | 'progress' | 'done'
     ) {
-      this.$router.push(`/task/${arrName}/${id}`);
+      this.$router.push(`/taskEdit/${arrName}/${id}`);
     },
     removeFromIndex: function (
       index: number,

@@ -70,9 +70,10 @@ import { storeMethods, store as storeTask, store } from '@/stores/kanban';
 import { store as storeDev } from '@/stores/developers';
 import type { IBacklogItem } from '@/interfaces/item';
 import { prioritys } from '@/constants/priority';
+import { useRouter } from 'vue-router';
 
 export default {
-  name: 'AddView',
+  name: 'EditTask',
   components: {
     buttonVue,
     inputWithLabelVue,
@@ -82,10 +83,27 @@ export default {
   },
   methods: {
     goBack() {
-      this.$router.push('/');
+      this.$router.go(-1);
     },
     handleTask() {
-      storeMethods.addTask(this.task);
+      const id = this.$route.params.id as string;
+      const arrName = this.$route.params.arrName as
+        | 'backlog'
+        | 'progress'
+        | 'done';
+
+      console.log(this.task);
+
+      if (id && arrName) {
+        console.log('editando');
+        storeMethods.editTask(this.task, id, arrName);
+      } else {
+        console.log('criando');
+        storeMethods.addTask(this.task);
+      }
+
+      console.log(storeTask);
+
       this.$router.push('/');
     },
   },
@@ -94,18 +112,44 @@ export default {
     devs: { value: number; label: string }[];
     prioritys: { value: string; label: string }[];
   } {
+    const id = this.$route.params.id as string;
+    const arrName = this.$route.params.arrName as
+      | 'backlog'
+      | 'progress'
+      | 'done';
+
+    console.log(id, arrName);
+
+    //@ts-ignore
+    const index = storeTask[arrName].findIndex(
+      (item: IBacklogItem) => item.id === +id
+    );
+
+    const currentTask: ITask = {
+      title: storeTask[arrName][index].title,
+      description: storeTask[arrName][index].description,
+      priority: storeTask[arrName][index].priority,
+      dueDate: new Date(storeTask[arrName][index].dueDate)
+        .toISOString()
+        .split('T')[0],
+      assingee: storeTask[arrName][index].assignee,
+    };
+
     return {
       devs: storeDev.developers.map((dev) => ({
         label: dev.name,
         value: dev.id,
       })),
-      task: {
-        title: '',
-        description: '',
-        priority: '',
-        dueDate: '',
-        assingee: 0,
-      },
+      task:
+        index !== -1
+          ? currentTask
+          : {
+              title: '',
+              description: '',
+              priority: '',
+              dueDate: '',
+              assingee: 0,
+            },
       prioritys,
     };
   },

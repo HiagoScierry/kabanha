@@ -11,7 +11,17 @@ interface IStore {
 const data: IStore = JSON.parse(localStorage.getItem('store') || '{}');
 
 export const store: IStore = reactive({
-  backlog: data.backlog || [],
+  backlog: data.backlog || [
+    {
+      id: 1,
+      title: 'Task 1',
+      description: 'Description 1',
+      priority: 'baixa',
+      dueDate: new Date('2021-08-01'),
+      assignee: 1,
+      created_at: new Date(),
+    },
+  ],
   progress: data.progress || [],
   done: data.done || [],
 });
