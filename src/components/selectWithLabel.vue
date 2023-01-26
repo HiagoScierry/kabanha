@@ -1,7 +1,12 @@
 <template>
   <div class="flex justify-evenly items-center">
     <label for="{{name}}">{{ label }} :</label>
-    <select name="{{name}}" :value="value" class="patternWithLabel">
+    <select
+      name="{{name}}"
+      :value="value"
+      @input="updateModelValue"
+      class="patternWithLabel"
+    >
       <option
         v-for="option in options"
         v-bind:key="option.value"
@@ -37,6 +42,13 @@ export default {
     options: {
       type: Array as () => Option[],
       required: true,
+    },
+  },
+  methods: {
+    //PERGUNTAR AO GIU
+    updateModelValue(event: any) {
+      console.log(event.target.value);
+      this.$emit('update:value', event.target.value);
     },
   },
 };

@@ -5,6 +5,7 @@
       type="date"
       name="{{name}}"
       :value="value"
+      @change="updateModelValue"
       class="patternWithLabel"
     />
   </div>
@@ -25,6 +26,16 @@ export default {
     name: {
       type: String,
       required: true,
+    },
+  },
+  methods: {
+    updateModelValue(event: any) {
+      console.log(event.target.value);
+
+      this.$emit(
+        'update:value',
+        new Date(event.target.value).toISOString().slice(0, 10)
+      );
     },
   },
 };

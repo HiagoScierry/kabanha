@@ -17,7 +17,7 @@ export const store: IStore = reactive({
       title: 'Task 1',
       description: 'Description 1',
       priority: 'baixa',
-      dueDate: new Date('2021-08-01'),
+      dueDate: new Date(),
       assignee: 1,
       created_at: new Date(),
     },
@@ -44,6 +44,21 @@ export const storeMethods = {
   ) {
     store[arrayName].splice(index, 1);
   },
+  editTask: (
+    task: ITask,
+    id: string,
+    arrName: 'backlog' | 'progress' | 'done'
+  ) => {
+    const index = store[arrName].findIndex((item) => item.id === +id);
+    console.log('TASK ARMAZENADA', store[arrName][index]);
+
+    store[arrName][index].title = task.title;
+    store[arrName][index].description = task.description;
+    store[arrName][index].priority = task.priority;
+    store[arrName][index].dueDate = new Date(task.dueDate);
+    store[arrName][index].assignee = task.assingee;
+    console.log('TASK DEPOIS DE ALTERADA', store[arrName][index]);
+  },
   //como tipar o event ?
   updateArray: (event: any, arrayName: 'backlog' | 'progress' | 'done') => {
     if (event.added !== undefined) {
@@ -61,26 +76,6 @@ export const storeMethods = {
     if (event.removed !== undefined) {
       storeMethods.removeItemFronIndex(event.removed.index, arrayName);
     }
-  },
-
-  editTask: (
-    task: ITask,
-    id: string,
-    arrName: 'backlog' | 'progress' | 'done'
-  ) => {
-    const index = store[arrName].findIndex((item) => item.id === +id);
-    const currentTask = store[arrName][index];
-
-    const newTask: IBacklogItem = {
-      ...currentTask,
-      title: task.title,
-      description: task.description,
-      priority: task.priority,
-      dueDate: new Date(task.dueDate),
-      assignee: task.assingee,
-    };
-
-    store[arrName][index] = newTask;
   },
   itemInProgress: (item: IBacklogItem) => {
     item.inDevelementDate = new Date();
