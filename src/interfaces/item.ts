@@ -5,7 +5,7 @@ export interface IBacklogItem {
   priority: string;
   inDevelementDate?: Date;
   finishDate?: Date;
-  dueDate: Date;
+  dueDate: string;
   assignee: number;
   created_at: Date;
 }

@@ -118,6 +118,8 @@ export default {
       (item: IBacklogItem) => item.id === +id
     );
 
+    console.log('INDEX', storeTask[arrName][index]);
+
     return {
       devs: storeDev.developers.map((dev) => ({
         label: dev.name,
@@ -127,9 +129,7 @@ export default {
         title: storeTask[arrName][index].title,
         description: storeTask[arrName][index].description,
         priority: storeTask[arrName][index].priority,
-        dueDate: new Date(storeTask[arrName][index].dueDate)
-          .toISOString()
-          .split('T')[0],
+        dueDate: storeTask[arrName][index].dueDate,
         assingee: storeTask[arrName][index].assignee,
       },
 

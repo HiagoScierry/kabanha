@@ -17,9 +17,14 @@ export const store: IStore = reactive({
       title: 'Task 1',
       description: 'Description 1',
       priority: 'baixa',
-      dueDate: new Date(),
+      dueDate: '2021-01-01',
       assignee: 1,
       created_at: new Date(),
+      // inDevelementDate: new Date('2021-01-01'),
+      // finishDate: new Date('2023-01-01'),
+      finishDate: new Date('2021-01-01'),
+      inDevelementDate: new Date('2023-01-02'),
+      
     },
   ],
   progress: data.progress || [],
@@ -33,7 +38,7 @@ export const storeMethods = {
       title: task.title,
       description: task.description,
       priority: task.priority,
-      dueDate: new Date(task.dueDate),
+      dueDate: task.dueDate,
       assignee: task.assingee,
       created_at: new Date(),
     });
@@ -55,7 +60,7 @@ export const storeMethods = {
     store[arrName][index].title = task.title;
     store[arrName][index].description = task.description;
     store[arrName][index].priority = task.priority;
-    store[arrName][index].dueDate = new Date(task.dueDate);
+    store[arrName][index].dueDate = task.dueDate;
     store[arrName][index].assignee = task.assingee;
     console.log('TASK DEPOIS DE ALTERADA', store[arrName][index]);
   },
@@ -81,6 +86,10 @@ export const storeMethods = {
     item.inDevelementDate = new Date();
   },
   itemHasDone: (item: IBacklogItem) => {
+    if (!item.inDevelementDate) {
+      item.inDevelementDate = new Date();
+    }
+
     item.finishDate = new Date();
     store.done.push(item);
   },

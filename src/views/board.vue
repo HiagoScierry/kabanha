@@ -95,27 +95,32 @@
           @change="update($event, 'done')"
           class="w-full h-5/6 overflow-y-scroll"
         >
-          <template #item="{ element, index }">
+          <template #item="{ element }">
             <div
               class="flex justify-between w-full h-24 p-2 border border-slate-50 rounded-md mb-2"
-              @click="routerToEdit(element.id, 'done')"
+              @click="alert('Tarefa Concluida , não é possivel editar !')"
             >
               <div class="flex flex-col justify-between items-start">
-                <p class="break-all">{{ element.title }}</p>
+                <p class="break-all">
+                  {{ element.title }}
+                </p>
                 <div class="flex items-center justify-start">
                   <i class="fa-solid fa-user mr-2"></i>
                   <p>{{ element.assignee }}</p>
                 </div>
               </div>
               <div class="flex flex-col justify-between items-end">
-                <i
-                  class="fa-solid fa-xmark hover:text-red-600"
-                  @click="removeFromIndex(index, 'done')"
-                ></i>
+                <i class="text-green-600 fa-solid fa-square-check"></i>
                 <div class="flex items-center">
-                  string
                   <i class="fa-regular fa-clock mr-2"></i>
-                  <p>{{ new Date(element.dueDate).toLocaleDateString() }}</p>
+                  <p class="text-sm">
+                    {{
+                      calcDiffDate(
+                        new Date(element.dueDate),
+                        element.finishDate
+                      )
+                    }}
+                  </p>
                 </div>
               </div>
             </div>
@@ -123,7 +128,7 @@
         </draggrable>
       </div>
     </div>
-    <div class="w-full bg-gray-200 h-1">
+    <div class="w-full bg-gray-200 h-1">  
       <div
         class="bg-blue-600 h-1"
         :style="`width: ${progressBarPercent}%`"
@@ -198,6 +203,18 @@ export default {
         (store.done.length /
           (store.backlog.length + store.progress.length + store.done.length)) *
         100;
+    },
+    calcDiffDate: function (dueDate: Date, finishDate: Date) {
+      const diff = Math.floor(
+        (dueDate.getTime() - finishDate.getTime()) / 86400000
+      );
+
+      return diff < 0
+        ? `Atraso em ${Math.abs(diff)} dias`
+        : `Concluido a ${diff} dias do previsto`;
+    },
+    alert: function (msg: string) {
+      alert(msg);
     },
   },
 };

@@ -66,9 +66,8 @@ import selectWithLabelVue from '@/components/selectWithLabel.vue';
 import dateWithLabelVue from '@/components/dateWithLabel.vue';
 import textAreaWithLabelVue from '@/components/textAreaWithLabel.vue';
 import type { ITask } from '@/interfaces/task';
-import { storeMethods, store as storeTask, store } from '@/stores/kanban';
+import { storeMethods } from '@/stores/kanban';
 import { store as storeDev } from '@/stores/developers';
-import type { IBacklogItem } from '@/interfaces/item';
 import { prioritys } from '@/constants/priority';
 
 export default {
@@ -85,6 +84,8 @@ export default {
       this.$router.push('/');
     },
     handleTask() {
+      console.log(this.task);
+
       storeMethods.addTask(this.task);
       this.$router.push('/');
     },
@@ -103,7 +104,7 @@ export default {
         title: '',
         description: '',
         priority: '',
-        dueDate: '',
+        dueDate: new Date().toISOString().slice(0, 10),
         assingee: 0,
       },
       prioritys,

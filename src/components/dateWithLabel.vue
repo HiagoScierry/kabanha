@@ -30,12 +30,7 @@ export default {
   },
   methods: {
     updateModelValue(event: any) {
-      console.log(event.target.value);
-
-      this.$emit(
-        'update:value',
-        new Date(event.target.value).toISOString().slice(0, 10)
-      );
+      this.$emit('update:value', event.target.value);
     },
   },
 };

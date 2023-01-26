@@ -5,6 +5,7 @@
       class="textareaWithLabel"
       name="{{name}}"
       :value="value"
+      @input="updateModelValue"
       maxlength="250"
     ></textarea>
   </div>
@@ -27,6 +28,12 @@ export default {
       required: true,
     },
   },
+  methods: {
+    updateModelValue(event: any) {
+      this.$emit('update:value', event.target.value);
+    },
+  },
+
 };
 </script>
 
