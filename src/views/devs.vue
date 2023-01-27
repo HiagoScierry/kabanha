@@ -24,7 +24,7 @@
         <div class="w-2/3">
           <selectWithLabelVue
             label="Cargo"
-            :value="newDev.ocupation"
+            v-model:value="newDev.ocupation"
             name="occupation"
             :options="ocuppations"
           />
@@ -66,7 +66,7 @@
 import buttonVue from '@/components/button.vue';
 import inputWithLabelVue from '@/components/inputWithLabel.vue';
 import selectWithLabelVue from '@/components/selectWithLabel.vue';
-import { store, storeMethods } from '@/stores/developers';
+import { store as storeDev, actions as actionsDev } from '@/stores/developers';
 import type { IDeveloper } from '@/interfaces/develpment';
 import { ocupation } from '@/constants/ocupation';
 
@@ -87,7 +87,7 @@ export default {
         id: new Date().getTime(),
       };
 
-      storeMethods.addDeveloper(newDev);
+      actionsDev.addDeveloper(newDev);
     },
   },
   data: (): {
@@ -96,7 +96,7 @@ export default {
     ocuppations: { label: string; value: string }[];
   } => {
     return {
-      devs: store.developers,
+      devs: storeDev.developers,
       newDev: {
         name: '',
         ocupation: '',

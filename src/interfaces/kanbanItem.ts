@@ -1,4 +1,4 @@
-export interface IBacklogItem {
+export type IKanbanItem = {
   id: number;
   title: string;
   description: string;
@@ -8,4 +8,4 @@ export interface IBacklogItem {
   dueDate: string;
   assignee: number;
   created_at: Date;
-}
+};

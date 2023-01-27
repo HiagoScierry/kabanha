@@ -1,12 +1,3 @@
-export type orTypeOcupation =
-  | 'developer'
-  | 'designer'
-  | 'tester'
-  | 'manager'
-  | 'productOwner'
-  | 'scrumMaster'
-  | '';
-
 export const ocupation = [
   { value: 'developer', label: 'Developer' },
   { value: 'designer', label: 'Designer' },

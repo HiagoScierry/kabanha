@@ -6,6 +6,11 @@ export const store: {
 } = reactive({
   developers: [
     {
+      id: 0,
+      name: '',
+      ocupation: '',
+    },
+    {
       id: 1,
       name: 'Hiago',
       ocupation: 'developer',
@@ -23,7 +28,7 @@ export const store: {
   ],
 });
 
-export const storeMethods = {
+export const actions = {
   addDeveloper(developer: IDeveloper) {
     store.developers.push(developer);
   },

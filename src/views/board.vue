@@ -28,7 +28,7 @@
                 <p class="break-all">{{ element.title }}</p>
                 <div class="flex items-center justify-start">
                   <i class="fa-solid fa-user mr-2"></i>
-                  <p>{{ element.assignee }}</p>
+                  <p>{{ findDev(element.assignee) }}</p>
                 </div>
               </div>
               <div class="flex flex-col justify-between items-end">
@@ -66,7 +66,7 @@
                 <p class="break-all">{{ element.title }}</p>
                 <div class="flex items-center justify-start">
                   <i class="fa-solid fa-user mr-2"></i>
-                  <p>{{ element.assignee }}</p>
+                  <p>{{ findDev(element.assignee) }}</p>
                 </div>
               </div>
               <div class="flex flex-col justify-between items-end">
@@ -107,7 +107,7 @@
                 </p>
                 <div class="flex items-center justify-start">
                   <i class="fa-solid fa-user mr-2"></i>
-                  <p>{{ element.assignee }}</p>
+                  <p>{{ findDev(element.assignee) }}</p>
                 </div>
               </div>
               <div class="flex flex-col justify-between items-end">
@@ -140,10 +140,15 @@
 
 <script lang="ts">
 //import draggrable
-import { store, storeMethods } from '@/stores/kanban';
+import {
+  store as storeKanban,
+  actions as actionsKanban,
+} from '@/stores/kanban';
+import { store as storeDev } from '@/stores/developers';
 import draggrable from 'vuedraggable';
-import type { IBacklogItem } from '../interfaces/item';
+import type { IKanbanItem } from '../interfaces/kanbanItem';
 import buttonVue from '@/components/button.vue';
+import type { BoardArrays } from '@/interfaces/boardArrays';
 
 export default {
   name: 'kanban-board',
@@ -162,18 +167,20 @@ export default {
     },
   },
   data(): {
-    arrBackLog: IBacklogItem[];
-    arrInProgress: IBacklogItem[];
-    arrDone: IBacklogItem[];
+    arrBackLog: IKanbanItem[];
+    arrInProgress: IKanbanItem[];
+    arrDone: IKanbanItem[];
     progressBarPercent: number;
   } {
     return {
-      arrBackLog: store.backlog,
-      arrInProgress: store.progress,
-      arrDone: store.done,
+      arrBackLog: storeKanban.backlog,
+      arrInProgress: storeKanban.progress,
+      arrDone: storeKanban.done,
       progressBarPercent:
-        (store.done.length /
-          (store.backlog.length + store.progress.length + store.done.length)) *
+        (storeKanban.done.length /
+          (storeKanban.backlog.length +
+            storeKanban.progress.length +
+            storeKanban.done.length)) *
         100,
     };
   },
@@ -185,27 +192,23 @@ export default {
     routerToAdd: function () {
       this.$router.push('/task');
     },
-    routerToEdit: function (
-      id: number,
-      arrName: 'backlog' | 'progress' | 'done'
-    ) {
+    routerToEdit: function (id: number, arrName: BoardArrays) {
       this.$router.push(`/taskEdit/${arrName}/${id}`);
     },
-    removeFromIndex: function (
-      index: number,
-      arrName: 'backlog' | 'progress' | 'done'
-    ) {
-      storeMethods.removeItemFronIndex(index, arrName);
+    removeFromIndex: function (index: number, arrName: BoardArrays) {
+      actionsKanban.removeItemFronIndex(index, arrName);
       this.calcProgressBar();
     },
-    update: function (event: any, arrName: 'backlog' | 'progress' | 'done') {
-      storeMethods.updateArray(event, arrName);
+    update: function (event: any, arrName: BoardArrays) {
+      actionsKanban.updateArray(event, arrName);
       this.calcProgressBar();
     },
     calcProgressBar: function () {
       this.progressBarPercent =
-        (store.done.length /
-          (store.backlog.length + store.progress.length + store.done.length)) *
+        (storeKanban.done.length /
+          (storeKanban.backlog.length +
+            storeKanban.progress.length +
+            storeKanban.done.length)) *
         100;
     },
     calcDiffDate: function (dueDate: Date, finishDate: Date) {
@@ -219,6 +222,10 @@ export default {
     },
     alert: function (msg: string) {
       alert(msg);
+    },
+    findDev: function (id: number) {
+      const dev = storeDev.developers.find((dev) => dev.id == id);
+      return dev ? dev.name : 'Sem Dev';
     },
   },
 };

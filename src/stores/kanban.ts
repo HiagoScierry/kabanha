@@ -1,11 +1,12 @@
 import { reactive } from 'vue';
-import type { IBacklogItem } from '@/interfaces/item';
-import type { ITask } from '@/interfaces/task';
+import type { IKanbanItem } from '@/interfaces/kanbanItem';
+import type { Task } from '@/interfaces/task';
+import type { BoardArrays } from '@/interfaces/boardArrays';
 
 interface IStore {
-  backlog: IBacklogItem[];
-  progress: IBacklogItem[];
-  done: IBacklogItem[];
+  backlog: IKanbanItem[];
+  progress: IKanbanItem[];
+  done: IKanbanItem[];
 }
 
 const data: IStore = JSON.parse(localStorage.getItem('store') || '{}');
@@ -24,15 +25,14 @@ export const store: IStore = reactive({
       // finishDate: new Date('2023-01-01'),
       finishDate: new Date('2021-01-01'),
       inDevelementDate: new Date('2023-01-02'),
-      
     },
   ],
   progress: data.progress || [],
   done: data.done || [],
 });
 
-export const storeMethods = {
-  addTask(task: ITask) {
+export const actions = {
+  addTask(task: Task) {
     store.backlog.push({
       id: new Date().getTime(),
       title: task.title,
@@ -43,17 +43,10 @@ export const storeMethods = {
       created_at: new Date(),
     });
   },
-  removeItemFronIndex(
-    index: number,
-    arrayName: 'backlog' | 'progress' | 'done'
-  ) {
+  removeItemFronIndex(index: number, arrayName: BoardArrays) {
     store[arrayName].splice(index, 1);
   },
-  editTask: (
-    task: ITask,
-    id: string,
-    arrName: 'backlog' | 'progress' | 'done'
-  ) => {
+  editTask: (task: Task, id: string, arrName: BoardArrays) => {
     const index = store[arrName].findIndex((item) => item.id === +id);
     console.log('TASK ARMAZENADA', store[arrName][index]);
 
@@ -65,27 +58,33 @@ export const storeMethods = {
     console.log('TASK DEPOIS DE ALTERADA', store[arrName][index]);
   },
   //como tipar o event ?
-  updateArray: (event: any, arrayName: 'backlog' | 'progress' | 'done') => {
+  updateArray: (event: any, arrayName: BoardArrays) => {
     if (event.added !== undefined) {
       store[arrayName].push(event.added.element);
 
       if (arrayName === 'progress') {
-        storeMethods.itemInProgress(event.added.element);
+        actions.itemInProgress(event.added.element);
       }
 
       if (arrayName === 'done') {
-        storeMethods.itemHasDone(event.added.element);
+        actions.itemHasDone(event.added.element);
       }
     }
 
     if (event.removed !== undefined) {
-      storeMethods.removeItemFronIndex(event.removed.index, arrayName);
+      actions.removeItemFronIndex(event.removed.index, arrayName);
     }
   },
-  itemInProgress: (item: IBacklogItem) => {
+  setDevInTask: (id: number) => {
+    const index = store.backlog.findIndex((item) => item.id === id);
+    actions.itemInProgress(store.backlog[index]);
+    store.progress.push(store.backlog[index]);
+    actions.removeItemFronIndex(index, 'backlog');
+  },
+  itemInProgress: (item: IKanbanItem) => {
     item.inDevelementDate = new Date();
   },
-  itemHasDone: (item: IBacklogItem) => {
+  itemHasDone: (item: IKanbanItem) => {
     if (!item.inDevelementDate) {
       item.inDevelementDate = new Date();
     }

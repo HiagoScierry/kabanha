@@ -40,7 +40,7 @@
         <div class="w-2/3">
           <selectWithLabelVue
             label="Atribuir a"
-            :value="task.assingee.toString()"
+            v-model:value="task.assingee"
             name="assingee"
             :options="devs"
           />
@@ -65,11 +65,15 @@ import inputWithLabelVue from '@/components/inputWithLabel.vue';
 import selectWithLabelVue from '@/components/selectWithLabel.vue';
 import dateWithLabelVue from '@/components/dateWithLabel.vue';
 import textAreaWithLabelVue from '@/components/textAreaWithLabel.vue';
-import type { ITask } from '@/interfaces/task';
-import { storeMethods, store as storeTask, store } from '@/stores/kanban';
+import type { Task } from '@/interfaces/task';
+import {
+  actions as actionsKanban,
+  store as storeKanban,
+} from '@/stores/kanban';
 import { store as storeDev } from '@/stores/developers';
-import type { IBacklogItem } from '@/interfaces/item';
+import type { IKanbanItem } from '@/interfaces/kanbanItem';
 import { prioritys } from '@/constants/priority';
+import type { BoardArrays } from '@/interfaces/boardArrays';
 
 export default {
   name: 'EditTask',
@@ -86,51 +90,55 @@ export default {
     },
     handleTask() {
       const id = this.$route.params.id as string;
-      const arrName = this.$route.params.arrName as
-        | 'backlog'
-        | 'progress'
-        | 'done';
+      const arrName = this.$route.params.arrName as BoardArrays;
 
       if (id && arrName) {
         console.log('TASK ALTERADA', this.task);
 
-        storeMethods.editTask(this.task, id, arrName);
+        actionsKanban.editTask(this.task, id, arrName);
+        this.setNewDev();
         this.$router.push('/');
         return;
       }
 
       alert('Erro ao salvar tarefa');
     },
+
+    setNewDev() {
+      const id = this.$route.params.id as string;
+      const arrName = this.$route.params.arrName as BoardArrays;
+
+      if (arrName === 'backlog' && this.task.assingee !== 0) {
+        actionsKanban.setDevInTask(+id);
+      }
+    },
   },
   data(): {
-    task: ITask;
+    task: Task;
     devs: { value: number; label: string }[];
     prioritys: { value: string; label: string }[];
   } {
     const id = this.$route.params.id as string;
-    const arrName = this.$route.params.arrName as
-      | 'backlog'
-      | 'progress'
-      | 'done';
-
+    const arrName = this.$route.params.arrName as BoardArrays;
     //@ts-ignore
-    const index = storeTask[arrName].findIndex(
-      (item: IBacklogItem) => item.id === +id
+    const index = storeKanban[arrName].findIndex(
+      (item: IKanbanItem) => item.id === +id
     );
 
-    console.log('INDEX', storeTask[arrName][index]);
+    console.log('INDEX', storeKanban[arrName][index]);
 
     return {
+      //@ts-ignore
       devs: storeDev.developers.map((dev) => ({
         label: dev.name,
         value: dev.id,
       })),
       task: {
-        title: storeTask[arrName][index].title,
-        description: storeTask[arrName][index].description,
-        priority: storeTask[arrName][index].priority,
-        dueDate: storeTask[arrName][index].dueDate,
-        assingee: storeTask[arrName][index].assignee,
+        title: storeKanban[arrName][index].title,
+        description: storeKanban[arrName][index].description,
+        priority: storeKanban[arrName][index].priority,
+        dueDate: storeKanban[arrName][index].dueDate,
+        assingee: storeKanban[arrName][index].assignee,
       },
 
       prioritys,

@@ -65,8 +65,8 @@ import inputWithLabelVue from '@/components/inputWithLabel.vue';
 import selectWithLabelVue from '@/components/selectWithLabel.vue';
 import dateWithLabelVue from '@/components/dateWithLabel.vue';
 import textAreaWithLabelVue from '@/components/textAreaWithLabel.vue';
-import type { ITask } from '@/interfaces/task';
-import { storeMethods } from '@/stores/kanban';
+import type { Task } from '@/interfaces/task';
+import { actions as actionsKanban } from '@/stores/kanban';
 import { store as storeDev } from '@/stores/developers';
 import { prioritys } from '@/constants/priority';
 
@@ -86,16 +86,17 @@ export default {
     handleTask() {
       console.log(this.task);
 
-      storeMethods.addTask(this.task);
+      actionsKanban.addTask(this.task);
       this.$router.push('/');
     },
   },
   data(): {
-    task: ITask;
+    task: Task;
     devs: { value: number; label: string }[];
     prioritys: { value: string; label: string }[];
   } {
     return {
+      //@ts-ignore
       devs: storeDev.developers.map((dev) => ({
         label: dev.name,
         value: dev.id,
