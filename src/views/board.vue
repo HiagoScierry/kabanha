@@ -212,8 +212,9 @@ export default {
         100;
     },
     calcDiffDate: function (dueDate: Date, finishDate: Date) {
+      const finishDateObj = new Date(finishDate);
       const diff = Math.floor(
-        (dueDate.getTime() - finishDate.getTime()) / 86400000
+        (dueDate.getTime() - finishDateObj.getTime()) / 86400000
       );
 
       return diff < 0
