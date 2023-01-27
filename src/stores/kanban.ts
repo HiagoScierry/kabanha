@@ -12,21 +12,7 @@ interface IStore {
 const data: IStore = JSON.parse(localStorage.getItem('store') || '{}');
 
 export const store: IStore = reactive({
-  backlog: data.backlog || [
-    {
-      id: 1,
-      title: 'Task 1',
-      description: 'Description 1',
-      priority: 'baixa',
-      dueDate: '2021-01-01',
-      assignee: 1,
-      created_at: new Date(),
-      // inDevelementDate: new Date('2021-01-01'),
-      // finishDate: new Date('2023-01-01'),
-      finishDate: new Date('2021-01-01'),
-      inDevelementDate: new Date('2023-01-02'),
-    },
-  ],
+  backlog: data.backlog || [],
   progress: data.progress || [],
   done: data.done || [],
 });
@@ -42,20 +28,21 @@ export const actions = {
       assignee: task.assingee,
       created_at: new Date(),
     });
+
+    actions.saveDataINLocalStorage();
   },
   removeItemFronIndex(index: number, arrayName: BoardArrays) {
     store[arrayName].splice(index, 1);
+    this.saveDataINLocalStorage();
   },
   editTask: (task: Task, id: string, arrName: BoardArrays) => {
     const index = store[arrName].findIndex((item) => item.id === +id);
-    console.log('TASK ARMAZENADA', store[arrName][index]);
-
     store[arrName][index].title = task.title;
     store[arrName][index].description = task.description;
     store[arrName][index].priority = task.priority;
     store[arrName][index].dueDate = task.dueDate;
     store[arrName][index].assignee = task.assingee;
-    console.log('TASK DEPOIS DE ALTERADA', store[arrName][index]);
+    actions.saveDataINLocalStorage();
   },
   //como tipar o event ?
   updateArray: (event: any, arrayName: BoardArrays) => {
@@ -74,12 +61,15 @@ export const actions = {
     if (event.removed !== undefined) {
       actions.removeItemFronIndex(event.removed.index, arrayName);
     }
+
+    actions.saveDataINLocalStorage();
   },
   setDevInTask: (id: number) => {
     const index = store.backlog.findIndex((item) => item.id === id);
     actions.itemInProgress(store.backlog[index]);
     store.progress.push(store.backlog[index]);
     actions.removeItemFronIndex(index, 'backlog');
+    actions.saveDataINLocalStorage();
   },
   itemInProgress: (item: IKanbanItem) => {
     item.inDevelementDate = new Date();
@@ -93,6 +83,7 @@ export const actions = {
     store.done.push(item);
   },
   saveDataINLocalStorage: () => {
+    localStorage.removeItem('store');
     localStorage.setItem('store', JSON.stringify(store));
   },
 };
