@@ -24,7 +24,7 @@
         <div class="w-2/3">
           <selectWithLabelVue
             label="Prioridade"
-            :value="task.priority"
+            v-model:value="task.priority"
             name="priority"
             :options="prioritys"
           />
@@ -32,7 +32,7 @@
         <div class="w-2/3">
           <dateWithLabelVue
             label="Data limite"
-            :value="task.dueDate"
+            v-model:value="task.dueDate"
             name="date"
           />
         </div>
@@ -49,7 +49,7 @@
 
       <textAreaWithLabelVue
         label="Descrição"
-        :value="task.description"
+        v-model:value="task.description"
         name="description"
       />
       <div class="text-center">
