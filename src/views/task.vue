@@ -84,8 +84,6 @@ export default {
       this.$router.push('/');
     },
     handleTask() {
-      console.log(this.task);
-
       actionsKanban.addTask(this.task);
       this.$router.push('/');
     },

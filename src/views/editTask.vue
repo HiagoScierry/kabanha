@@ -93,7 +93,7 @@ export default {
       const arrName = this.$route.params.arrName as BoardArrays;
 
       if (id && arrName) {
-        console.log('TASK ALTERADA', this.task);
+        ('TASK ALTERADA', this.task);
 
         actionsKanban.editTask(this.task, id, arrName);
         this.setNewDev();
@@ -124,9 +124,6 @@ export default {
     const index = storeKanban[arrName].findIndex(
       (item: IKanbanItem) => item.id === +id
     );
-
-    console.log('INDEX', storeKanban[arrName][index]);
-
     return {
       //@ts-ignore
       devs: storeDev.developers.map((dev) => ({

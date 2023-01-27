@@ -47,7 +47,6 @@ export default {
   methods: {
     //PERGUNTAR AO GIU
     updateModelValue(event: any) {
-      console.log(event.target.value);
       this.$emit('update:value', event.target.value);
     },
   },
